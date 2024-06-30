@@ -1,7 +1,8 @@
 package GameLogic;
 
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.Collections;
 public class CardsSet {
     public List<Card> cards;
     public int type;
@@ -9,6 +10,7 @@ public class CardsSet {
 
     public void setCards(List<Card> cards){
         this.cards = cards;
+        Collections.sort(cards);
     }
 
     public void setType(int type){

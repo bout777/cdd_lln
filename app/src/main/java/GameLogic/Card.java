@@ -1,8 +1,7 @@
 package GameLogic;
 
-enum suit{
 
-}
+
 public class Card implements Comparable<Card>{
     private String suit;//花色
     private String rank;//大小
