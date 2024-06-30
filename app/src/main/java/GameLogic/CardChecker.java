@@ -6,7 +6,27 @@ import java.util.Collections;
 
 public class CardChecker {
     public void SetTypeAndKey(CardsSet set){
-
+        if(isSingle(set))
+            set.setType(CardsType.Single);
+        else if(isPair(set))
+            set.setType(CardsType.Pair);
+        else if(isTriplet(set))
+            set.setType(CardsType.Triplet);
+        else if(isHuLu(set))
+            set.setType(CardsType.HuLu);
+        else if(isTieZhi(set))
+            set.setType(CardsType.TieZhi);
+        else {
+            //同花和顺子的判断
+            boolean isShun = isShun(set);
+            boolean isTongHua = isTongHua(set);
+            if(isShun&&isTongHua)
+                set.setType(CardsType.TongHuaShun);
+            else if (isShun)
+                set.setType(CardsType.Shun);
+            else if(isTongHua)
+                set.setType(CardsType.TongHua);
+        }
     }
 
     public static boolean isSingle(CardsSet set) {
@@ -29,6 +49,16 @@ public class CardChecker {
         if(set.size() == 3 && set.get(0).getRank().equals(set.get(1).getRank()) &&
                 set.get(1).getRank().equals(set.get(2).getRank())){
             set.setKey(set.get(2));
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isBomb(CardsSet set){
+        if(set.size() == 4 && set.get(0).getRank().equals(set.get(1).getRank()) &&
+                set.get(1).getRank().equals(set.get(2).getRank())&&
+                set.get(2).getRank().equals(set.get(3).getRank())){
+            set.setKey(set.get(3));
             return true;
         }
         return false;
