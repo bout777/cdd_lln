@@ -2,10 +2,11 @@ package GameLogic;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CardChecker {
-    public void SetTypeAndKey(CardsSet set){
+
+    public int Compare
+    public void SetType(CardsSet set){
         if(isSingle(set))
             set.setType(CardsType.Single);
         else if(isPair(set))
@@ -172,6 +173,5 @@ public class CardChecker {
             default:return 0;
         }
     }
-
 }
 

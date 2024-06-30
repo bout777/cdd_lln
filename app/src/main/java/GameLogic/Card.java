@@ -3,8 +3,8 @@ package GameLogic;
 
 
 public class Card implements Comparable<Card>{
-    private String suit;//花色
-    private String rank;//大小
+    private final String suit;//花色
+    private final String rank;//大小
 
     public Card(String suit, String rank) {
         this.suit = suit;
