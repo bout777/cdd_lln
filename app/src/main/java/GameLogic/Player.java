@@ -3,8 +3,8 @@ package GameLogic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
-    private String name;
+public abstract class Player {
+    private final String name;
     private Hand hand;
 
     public Player(String name) {
@@ -24,7 +24,9 @@ public class Player {
         hand.addCard(card);
     }
 
-    public void playCard(List<Card> cards) {
+    public void playCard(ArrayList<Card> cards) {
         hand.playCards(cards);
     }
+
+    public abstract ArrayList<Card> playCards(final CardsSet setOnDesktop);
 }

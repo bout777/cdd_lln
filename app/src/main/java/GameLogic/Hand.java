@@ -19,12 +19,18 @@ public class Hand {
     public void SortCard() {
         Collections.sort(cards);
     }
-    public void playCards(List<Card> cardsToPlay) {
+    public void playCards(ArrayList<Card> cardsToPlay) {
         cards.removeAll(cardsToPlay);
     }
 
-    public List<Card> getCards() {
-        return cards;
+    public Card getCard(int i) {
+        return cards.get(i);
     }
+
+    public boolean isEmpty(){
+        return this.cards.isEmpty();
+    }
+
+    public int size(){return this.cards.size();}
 
 }

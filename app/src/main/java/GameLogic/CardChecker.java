@@ -1,21 +1,25 @@
 package GameLogic;
 
+import androidx.annotation.NonNull;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
 public class CardChecker {
 
-    public int CompareTo(CardsSet set1,CardsSet set){ //待写
+    public static int CompareTo(CardsSet set1,CardsSet set){ //待写
         return 0;
     }//实现卡组之间的比较
-    public void SetType(CardsSet set){
-
+    public static void SetTypeAndKey(CardsSet set){
         if(isSingle(set))
             set.setType(CardsType.Single);
         else if(isPair(set))
             set.setType(CardsType.Pair);
         else if(isTriplet(set))
             set.setType(CardsType.Triplet);
+        else if(isBomb(set))
+            set.setType(CardsType.Bomb);
         else if(isHuLu(set))
             set.setType(CardsType.HuLu);
         else if(isTieZhi(set))
@@ -30,39 +34,41 @@ public class CardChecker {
                 set.setType(CardsType.Shun);
             else if(isTongHua)
                 set.setType(CardsType.TongHua);
+            else
+                set.setType(CardsType.error);
         }
     }
 
     public static boolean isSingle(CardsSet set) {
         if(set.size() == 1){
-            set.setKey(set.get(0));
+            set.setKey(set.getCard(0));
             return true;
         }
         return false;
     }
 
     public static boolean isPair(CardsSet set) {
-        if(set.size() == 2 && set.get(0).getRank().equals(set.get(1).getRank())){
-            set.setKey(set.get(1));
+        if(set.size() == 2 && set.getCard(0).getRank().equals(set.getCard(1).getRank())){
+            set.setKey(set.getCard(1));
             return true;
         }
         return false;
     }
 
     public static boolean isTriplet(CardsSet set) {
-        if(set.size() == 3 && set.get(0).getRank().equals(set.get(1).getRank()) &&
-                set.get(1).getRank().equals(set.get(2).getRank())){
-            set.setKey(set.get(2));
+        if(set.size() == 3 && set.getCard(0).getRank().equals(set.getCard(1).getRank()) &&
+                set.getCard(1).getRank().equals(set.getCard(2).getRank())){
+            set.setKey(set.getCard(2));
             return true;
         }
         return false;
     }
 
     public static boolean isBomb(CardsSet set){
-        if(set.size() == 4 && set.get(0).getRank().equals(set.get(1).getRank()) &&
-                set.get(1).getRank().equals(set.get(2).getRank())&&
-                set.get(2).getRank().equals(set.get(3).getRank())){
-            set.setKey(set.get(3));
+        if(set.size() == 4 && set.getCard(0).getRank().equals(set.getCard(1).getRank()) &&
+                set.getCard(1).getRank().equals(set.getCard(2).getRank())&&
+                set.getCard(2).getRank().equals(set.getCard(3).getRank())){
+            set.setKey(set.getCard(3));
             return true;
         }
         return false;
@@ -70,37 +76,67 @@ public class CardChecker {
 
     public static boolean isTongHua(CardsSet set) {
         if (set.size() < 5) return false;
-        String curSuit = set.get(0).getSuit();
+        String curSuit = set.getCard(0).getSuit();
 
         for(int i = 1;i< set.size();i++)
-            if (!set.get(i).getSuit().equals(curSuit))
+            if (!set.getCard(i).getSuit().equals(curSuit))
                 return false;
-        set.setKey(set.get(set.size()-1)); //设置key为最大的牌
+        set.setKey(set.getCard(set.size()-1)); //设置key为最大的牌
         return true;
     }
 
     public static boolean isShun(CardsSet set) {
         if (set.size() < 5) return false;
+
         List<Integer> values = new ArrayList<>();
         for (int i = 0;i< set.size();i++) {
-            values.add(rankToValue(set.get(i).getRank()));
+
+            //将牌面大小转化成整数
+            int Value = rankToValue(set.getCard(i).getRank());
+
+            //2在顺子中的牌面比较小，重新设置
+            if(Value==15)
+                Value = 2;
+
+            //添加
+            values.add(Value);
         }
-        if(values.get(0)==1&&values.get(values.size()-1)==13){ //处理A在顺子中的复用
-            values.remove(0);
-            values.add(14);
+
+        //排序
+        Collections.sort(values);
+
+        //处理A在顺子中的复用，有2和A同时出现时，A排在2的前面，否则A排在K的后面
+        if(values.get(0)==2&&values.get(values.size()-1)==14){
+            values.remove(values.size()-1);
+            values.add(0,1);
         }
-        for (int i = 1; i < values.size(); i++) {
-            if (values.get(i) != values.get(i - 1) + 1) return false;
+
+        //判断是否为顺子的逻辑
+        for (int i = 1; i < values.size(); i++)
+            if (values.get(i) != values.get(i - 1) + 1)
+                return false;
+
+        //循环成功跳出，判断卡组是否需要重新排序，两种情况，34562，345A2
+        if(set.getCard(3).getRank().equals("6")){
+            Card cardOf2 = set.getCards().remove(4);
+            set.getCards().add(0,cardOf2);
+        }else if(set.getCard(4).getRank().equals("2")){
+            Card cardOf2 = set.getCards().remove(4);
+            Card cardOfA = set.getCards().remove(3);
+            set.getCards().add(0,cardOf2);
+            set.getCards().add(0,cardOfA);
         }
-        set.setKey(set.get(set.size()-1)); //设置key为最大的牌
+
+        //设置key为最末尾的牌
+        set.setKey(set.getCard(set.size()-1));
         return true;
     }
 
-    public static boolean isTieZhi(CardsSet set){
+    public static boolean isTieZhi(final CardsSet set){
         if (set.size() != 5) return false;
         List<Integer> values = new ArrayList<>();
         for (int i = 0;i< set.size();i++) {
-            values.add(rankToValue(set.get(i).getRank()));
+            values.add(rankToValue(set.getCard(i).getRank()));
         }
         int rank1 = values.get(0);
         int rank2 = values.get(values.size()-1);
@@ -113,17 +149,17 @@ public class CardChecker {
                 count2++;
         }
         if(conut1*count2==4){
-            set.setKey(set.get(2));//设置key为第三张的牌
+            set.setKey(set.getCard(2));//设置key为第三张的牌
             return true;
         }
         return false;
     }
 
-    public static boolean isHuLu(CardsSet set){
+    public static boolean isHuLu(final CardsSet set){
         if (set.size() != 5) return false;
         List<Integer> values = new ArrayList<>();
         for (int i = 0;i< set.size();i++) {
-            values.add(rankToValue(set.get(i).getRank()));
+            values.add(rankToValue(set.getCard(i).getRank()));
         }
         int rank1 = values.get(0);
         int rank2 = values.get(values.size()-1);
@@ -136,12 +172,11 @@ public class CardChecker {
                 count2++;
         }
         if(conut1*count2 == 6){
-            set.setKey(set.get(2));//设置key为第三张的牌
+            set.setKey(set.getCard(2));//设置key为第三张的牌
             return true;
         }
         return false;
     }
-
 
 
     public static int rankToValue(String rank) {
@@ -157,8 +192,8 @@ public class CardChecker {
             case "5": return 5;
             case "4": return 4;
             case "3": return 3;
-            case "2": return 2;
-            case "A": return 1;
+            case "2": return 15;
+            case "A": return 14;
             default:  return 0;
         }
     }
