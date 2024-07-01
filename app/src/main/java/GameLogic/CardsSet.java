@@ -3,6 +3,8 @@ package GameLogic;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
+
+//牌组，玩家打出的牌
 public class CardsSet {
     public List<Card> cards;
     public int type;

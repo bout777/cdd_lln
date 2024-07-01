@@ -2,7 +2,9 @@ package GameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
+//玩家的所有手牌
 public class Hand {
     private List<Card> cards;
 
@@ -15,7 +17,7 @@ public class Hand {
     }
 
     public void SortCard() {
-
+        Collections.sort(cards);
     }
     public void playCards(List<Card> cardsToPlay) {
         cards.removeAll(cardsToPlay);

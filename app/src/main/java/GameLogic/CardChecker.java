@@ -5,10 +5,11 @@ import java.util.ArrayList;
 
 public class CardChecker {
 
-    public int CompareTo(){ //待写
+    public int CompareTo(CardsSet set1,CardsSet set){ //待写
         return 0;
-    }
+    }//实现卡组之间的比较
     public void SetType(CardsSet set){
+
         if(isSingle(set))
             set.setType(CardsType.Single);
         else if(isPair(set))

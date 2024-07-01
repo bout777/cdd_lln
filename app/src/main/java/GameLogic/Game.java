@@ -7,6 +7,7 @@ public class Game {
     private List<Player> players;
     private Deck deck;
     private List<Card> curPile;
+    private Frame;
 
     public Game() {
         players = new ArrayList<>();
@@ -18,7 +19,7 @@ public class Game {
         players.add(new Player(name));
     }
 
-    public void dealCards() {
+    public void dealCards() { //分发卡牌
         int numPlayers = players.size();
         while (deck.size() > 0) {
             for (Player player : players) {

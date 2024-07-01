@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Deck {
+public class Deck { //一整副牌，用于分发到玩家
     private List<Card> cards;
     public Deck() {
         cards = new ArrayList<>();
