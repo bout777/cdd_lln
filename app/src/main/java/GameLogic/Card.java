@@ -5,6 +5,7 @@ package GameLogic;
 public class Card implements Comparable<Card>{
     private final String suit;//花色
     private final String rank;//大小
+    private CardChecker cardChecker;
 
     public Card(String suit, String rank) {
         this.suit = suit;
@@ -21,15 +22,17 @@ public class Card implements Comparable<Card>{
 
 
     @Override
+    //重写牌的比较大小
     public int compareTo(Card card) {
-        int a = CardChecker.rankToValue(this.getRank());
-        int b = CardChecker.rankToValue(card.getRank());
+        this.cardChecker = CardChecker.getInstance();
+        int a = cardChecker.rankToValue(this.getRank());
+        int b = cardChecker.rankToValue(card.getRank());
         if(a==b){
-            a = CardChecker.suitToValue(this.getSuit());
-            b = CardChecker.suitToValue(card.getSuit());
-            return a-b;
+            a = cardChecker.suitToValue(this.getSuit());
+            b = cardChecker.suitToValue(card.getSuit());
+            return Integer.compare(a, b);
         }
-        return a-b;
+        return Integer.compare(a, b);
     }
 }
 

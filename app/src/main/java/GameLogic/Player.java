@@ -24,9 +24,10 @@ public abstract class Player {
         hand.addCard(card);
     }
 
-    public void playCard(ArrayList<Card> cards) {
-        hand.playCards(cards);
-    }
+    //成功出牌
+//    public CardsSet playCard(ArrayList<Card> cards) {
+//        return hand.playCards(cards);
+//    }
 
     public abstract ArrayList<Card> playCards(final CardsSet setOnDesktop);
 }

@@ -8,10 +8,26 @@ import java.util.ArrayList;
 
 public class CardChecker {
 
-    public static int CompareTo(CardsSet set1,CardsSet set){ //待写
-        return 0;
-    }//实现卡组之间的比较
-    public static void SetTypeAndKey(CardsSet set){
+    //单实例
+    private static volatile CardChecker instance;
+    // 私有构造函数，防止外部创建实例
+    private CardChecker() {}
+
+
+    //返回唯一单实例，若无则创建，若有直接返回
+    public static CardChecker getInstance() {
+        if (instance == null) {
+            synchronized (CardChecker.class) {
+                if (instance == null) {
+                    instance = new CardChecker();
+                }
+            }
+        }
+        return instance;
+    }
+
+    //设置牌组的类型
+    public void SetTypeAndKey(CardsSet set){
         if(isSingle(set))
             set.setType(CardsType.Single);
         else if(isPair(set))
@@ -39,7 +55,8 @@ public class CardChecker {
         }
     }
 
-    public static boolean isSingle(CardsSet set) {
+    //下面都是牌组的类型判断
+    public boolean isSingle(CardsSet set) {
         if(set.size() == 1){
             set.setKey(set.getCard(0));
             return true;
@@ -47,7 +64,7 @@ public class CardChecker {
         return false;
     }
 
-    public static boolean isPair(CardsSet set) {
+    public boolean isPair(CardsSet set) {
         if(set.size() == 2 && set.getCard(0).getRank().equals(set.getCard(1).getRank())){
             set.setKey(set.getCard(1));
             return true;
@@ -55,7 +72,7 @@ public class CardChecker {
         return false;
     }
 
-    public static boolean isTriplet(CardsSet set) {
+    public boolean isTriplet(CardsSet set) {
         if(set.size() == 3 && set.getCard(0).getRank().equals(set.getCard(1).getRank()) &&
                 set.getCard(1).getRank().equals(set.getCard(2).getRank())){
             set.setKey(set.getCard(2));
@@ -64,7 +81,7 @@ public class CardChecker {
         return false;
     }
 
-    public static boolean isBomb(CardsSet set){
+    public boolean isBomb(CardsSet set){
         if(set.size() == 4 && set.getCard(0).getRank().equals(set.getCard(1).getRank()) &&
                 set.getCard(1).getRank().equals(set.getCard(2).getRank())&&
                 set.getCard(2).getRank().equals(set.getCard(3).getRank())){
@@ -74,7 +91,7 @@ public class CardChecker {
         return false;
     }
 
-    public static boolean isTongHua(CardsSet set) {
+    public boolean isTongHua(CardsSet set) {
         if (set.size() < 5) return false;
         String curSuit = set.getCard(0).getSuit();
 
@@ -85,7 +102,7 @@ public class CardChecker {
         return true;
     }
 
-    public static boolean isShun(CardsSet set) {
+    public boolean isShun(CardsSet set) {
         if (set.size() < 5) return false;
 
         List<Integer> values = new ArrayList<>();
@@ -132,7 +149,7 @@ public class CardChecker {
         return true;
     }
 
-    public static boolean isTieZhi(final CardsSet set){
+    public boolean isTieZhi(final CardsSet set){
         if (set.size() != 5) return false;
         List<Integer> values = new ArrayList<>();
         for (int i = 0;i< set.size();i++) {
@@ -155,7 +172,7 @@ public class CardChecker {
         return false;
     }
 
-    public static boolean isHuLu(final CardsSet set){
+    public boolean isHuLu(final CardsSet set){
         if (set.size() != 5) return false;
         List<Integer> values = new ArrayList<>();
         for (int i = 0;i< set.size();i++) {
@@ -179,7 +196,7 @@ public class CardChecker {
     }
 
 
-    public static int rankToValue(String rank) {
+    public int rankToValue(String rank) {
         switch (rank) {
             case "K": return 13;
             case "Q": return 12;
@@ -198,7 +215,7 @@ public class CardChecker {
         }
     }
 
-    public static int suitToValue(String suit) {
+    public int suitToValue(String suit) {
         switch (suit) {
             case "Diamond":
                 return 1;
