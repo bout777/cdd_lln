@@ -134,7 +134,7 @@ public class CardChecker {
                 return false;
 
         //循环成功跳出，判断卡组是否需要重新排序，两种情况，34562，345A2
-        if(set.getCard(3).getRank().equals("6")){
+        if(set.getCard(3).getRank().equals("6")&&set.getCard(4).getRank().equals("2")){
             Card cardOf2 = set.getCards().remove(4);
             set.getCards().add(0,cardOf2);
         }else if(set.getCard(4).getRank().equals("2")){

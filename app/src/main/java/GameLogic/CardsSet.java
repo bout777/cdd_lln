@@ -10,7 +10,7 @@ public class CardsSet implements Comparable<CardsSet> {
     private ArrayList<Card> cards;
     private int type;//牌组类型
     private Card key;
-    private CardChecker cardChecker = CardChecker.getInstance();
+    private final CardChecker cardChecker = CardChecker.getInstance();
 
     public CardsSet(){
         //this.cards=new ArrayList<>(cards);
