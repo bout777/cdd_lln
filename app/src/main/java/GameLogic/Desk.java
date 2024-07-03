@@ -1,18 +1,14 @@
 package GameLogic;
 
 
-import android.graphics.Canvas;
-
-import java.util.ArrayList;
-
-public class Frame{
+public class Desk {
 
     private CardsSet setOnDesktop; //最新的一手牌
     private boolean GameOver;
     private int RoundNumber;//轮数
 
 
-    public Frame(){
+    public Desk(){
         setOnDesktop= new CardsSet();
         GameOver=false;
         RoundNumber=0;

@@ -20,6 +20,10 @@ public class Card implements Comparable<Card>{
         return rank;
     }
 
+    //返回牌的大小
+    public int getIntRank(){return cardChecker.rankToValue(rank);}
+
+    public int getIntSuit(){return cardChecker.suitToValue(suit);}
 
     @Override
     //重写牌的比较大小
@@ -34,6 +38,15 @@ public class Card implements Comparable<Card>{
         }
         return Integer.compare(a, b);
     }
+
+    //比较牌的大小是否一样
+    public int rankCompareTo(Card card) {
+        this.cardChecker = CardChecker.getInstance();
+        int a = cardChecker.rankToValue(this.getRank());
+        int b = cardChecker.rankToValue(card.getRank());
+        return Integer.compare(a, b);
+    }
+
 }
 
 

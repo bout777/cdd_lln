@@ -9,7 +9,7 @@ public class GameController {
     private Deck deck; //发给玩家的牌库
     private int currentID = 0; //当前操作的人的id
     private int hostID;
-    private final Frame frame = new Frame();
+    private final Desk desk = new Desk();
 
     public GameController(){
         setPlayers("林连南");//玩家上桌
@@ -120,7 +120,7 @@ public class GameController {
             return false;
 
         //如果比桌上的牌小返回false
-        if(setToPlay.compareTo(frame.getSetOnDesktop())<=0)
+        if(setToPlay.compareTo(desk.getSetOnDesktop())<=0)
             return false;
 
         //符合条件，可以打出
@@ -142,7 +142,7 @@ public class GameController {
         paintHand();
 
         while (true){
-            if(!frame.IfGameOver()) {
+            if(!desk.IfGameOver()) {
                 if (this.hostID == this.currentID) {
                 /*
                     TODO:
@@ -150,7 +150,7 @@ public class GameController {
                         玩家有出牌，Pass两个选项
                 */
                     if(players.get(this.currentID).getHand().isEmpty())
-                        frame.setIfGameOver(true);
+                        desk.setIfGameOver(true);
                     updateRound();
                     continue;
                 } else {
@@ -158,7 +158,7 @@ public class GameController {
                     Player bot = players.get(this.currentID);
 
                     //获取bot的出牌列表
-                    final ArrayList<Card> cardsToPlay = bot.playCards(frame.getSetOnDesktop());
+                    final ArrayList<Card> cardsToPlay = bot.playCards(desk.getSetOnDesktop());
 
                     //如果非空，把bot打出的牌整合成牌组，放入桌面
                     if(cardsToPlay!=null) {
@@ -176,7 +176,7 @@ public class GameController {
                               Robot方法的返回值作为参数传入CoverCard,调用CoverCard
                      */
                     if(players.get(this. currentID).getHand().isEmpty())
-                        frame.setIfGameOver(true);
+                        desk.setIfGameOver(true);
                     updateRound();
                     continue;
                 }
@@ -242,7 +242,7 @@ public class GameController {
 
     //更新桌上牌组
     public void updateSetOnDesktop(ArrayList<Card> cards){
-        frame.getSetOnDesktop().setCards(cards);
-        cardChecker.SetTypeAndKey(frame.getSetOnDesktop());
+        desk.getSetOnDesktop().setCards(cards);
+        cardChecker.SetTypeAndKey(desk.getSetOnDesktop());
     }
 }
