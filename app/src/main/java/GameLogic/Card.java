@@ -21,9 +21,15 @@ public class Card implements Comparable<Card>{
     }
 
     //返回牌的大小
-    public int getIntRank(){return cardChecker.rankToValue(rank);}
+    public int getIntRank(){
+        this.cardChecker = CardChecker.getInstance();
+        return cardChecker.rankToValue(rank);
+    }
 
-    public int getIntSuit(){return cardChecker.suitToValue(suit);}
+    public int getIntSuit(){
+        this.cardChecker = CardChecker.getInstance();
+        return cardChecker.suitToValue(suit);
+    }
 
     @Override
     //重写牌的比较大小

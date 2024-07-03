@@ -15,16 +15,6 @@ public class RobotPlayer extends Player{
 
     @Override
     public ArrayList<Card> playCards(final CardsSet setOnDesktop){
-        //TODO：记得new一个Arraylist用来返回,返回之前调用
-        //setOnDesktop为空表示轮到自己出牌，采用最小牌策略
-        if (setOnDesktop.getCards().isEmpty())
-        {
-            setStrategy(new StrategyMinPlayCard());
-        }
-        else{
-            //如果有别人出牌，尽全力出牌
-            setStrategy(new StrategyTryBest());
-        }
         return strategy.playCard(getHand(),setOnDesktop);
     }
 }

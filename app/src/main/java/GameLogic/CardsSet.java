@@ -15,7 +15,7 @@ public class CardsSet implements Comparable<CardsSet> {
     public CardsSet(){
         //this.cards=new ArrayList<>(cards);
         //这里还得调用一下CardCheck验证一下是哪个Type,不过应该是GameController拿到牌组后才进行type赋值和key判断
-        //CardChecker cardChecker = CardChecker.getinstance();
+        //CardChecker cardChecker = CardChecker.instance();
     }
 
     public void setCards(ArrayList<Card> cards){
