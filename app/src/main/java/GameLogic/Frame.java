@@ -1,44 +1,53 @@
 package GameLogic;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Canvas;
+import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
-public class Frame{
 
-    private CardsSet setOnDesktop; //最新的一手牌
-    private boolean GameOver;
-    private int RoundNumber;//轮数
+public class Frame extends AppCompatActivity{
+    private final GameController controller;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    public Frame(){
-        setOnDesktop= new CardsSet();
-        GameOver=false;
-        RoundNumber=0;
     }
 
-    //更新轮数和上家牌
-    public void RenewSetOnDesktop(CardsSet setOnDesktop) {
-        this.setOnDesktop = setOnDesktop;
-        RoundNumber++;
+    public Frame(GameController c){
+        this.controller = c;
     }
 
-    //判断游戏是否结束
-    public boolean IfGameOver(){
-        return GameOver;
+    public void paintHand(ArrayList<Card> handCards){
+
     }
 
-    public void setIfGameOver(boolean Val){this.GameOver = Val;}
+    public void paintResult(ArrayList<Integer> result){
 
-    //获取上家牌和轮数
-    public int getRoundNumber() {
-        return RoundNumber;
     }
 
-    public CardsSet getSetOnDesktop() {
-        return setOnDesktop;
+    public void CoverCard(ArrayList<Card> setOnDesktop){
+        controller.updateSetOnDesktop(setOnDesktop);
+        //TODO:更新ui
     }
+
+    public void paintPlayers(ArrayList<Player> players){
+
+    }
+
+    public void lockPlayerView(){
+
+    }
+
+    public void unlockPlayerView(){
+
+    }
+
 }
-
-

@@ -29,5 +29,5 @@ public abstract class Player {
 //        return hand.playCards(cards);
 //    }
 
-    public abstract ArrayList<Card> playCards(final CardsSet setOnDesktop);
+//    public abstract ArrayList<Card> playCards(final CardsSet setOnDesktop);
 }
