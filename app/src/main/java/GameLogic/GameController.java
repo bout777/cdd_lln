@@ -234,7 +234,6 @@ public class GameController {
     public void RobotsPlay(){
         while (gameData.getCurrentID()!= gameData.getHostID()){
             ArrayList<Card> cards = gameData.getRobotPlayers().get(gameData.getCurrentID()).playCards2(desk.getSetOnDesktop(), gameData.getGameRound());
-
             //机器人胜利
             if(gameData.getRobotPlayers().get(gameData.getCurrentID()).getHand().isEmpty()){
                 gameData.setResultScore(calScore());
@@ -243,6 +242,7 @@ public class GameController {
             }
 
             if(cards!=null){
+                Log.d("Robot", Integer.toString(gameData.getCurrentID())+cards.get(0).getSuit()+cards.get(0).getRank());
                 frame.CoverCard(cards);
                 gameData.setGameRound(gameData.getGameRound()+1);
                 gameData.getRobotPlayers().get(gameData.getCurrentID()).setGameRound(gameData.getGameRound());

@@ -92,8 +92,9 @@ public class RobotPlayer extends Player implements Strategy{
     public ArrayList<Card> playCards2(CardsSet setOnDesktop,int Round) {
         if(this.getGameRound()==Round){
             ArrayList<Card> result = new ArrayList<>();
-            Card card = this.getHand().getCards().remove(0);
+            Card card = this.getHand().getCards().get(this.getHand().getCards().size()-1);
             result.add(card);
+            this.getHand().getCards().removeAll(result);
             return result;
         }
         int Type=setOnDesktop.getType();
@@ -103,6 +104,7 @@ public class RobotPlayer extends Player implements Strategy{
             for (Card card:cards){
                 if(card.compareTo(setOnDesktop.getKey())>0){
                     result.add(card);
+                    this.getHand().getCards().removeAll(result);
                     return result;
                 }
             }
