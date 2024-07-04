@@ -101,7 +101,12 @@ public class Frame extends AppCompatActivity{
         TextView textView = findViewById(R.id.textView);
         textView.setText(result.toString());
         textView.setVisibility(View.VISIBLE);
-
+        HandView.setVisibility(View.GONE);
+        Button passbtn = findViewById(R.id.pass);
+        Button playbtn = findViewById(R.id.play);
+        playbtn.setVisibility(View.GONE);
+        passbtn.setVisibility(View.GONE);
+        DesktopView.setVisibility(View.GONE);
     }
 
     public void CoverCard(ArrayList<Card> setOnDesktop){

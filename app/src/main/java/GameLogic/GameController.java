@@ -178,7 +178,7 @@ public class GameController {
             int n = hand.size();
             if(hand.getCard(hand.size()-1).getRank().equals("2"))//如果有2，底分翻倍
                 n*=2;
-            switch (n){
+            switch (hand.size()){
                 case 0:
                 case 1:
                 case 2:
@@ -201,6 +201,8 @@ public class GameController {
                 case 13:
                     baseScore.add(4*n);  // n = 13 时，牌分为 4n
                     break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + n);
             }
         }
 
