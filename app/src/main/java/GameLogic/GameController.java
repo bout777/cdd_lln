@@ -1,25 +1,22 @@
 package GameLogic;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 public class GameController {
 
     private final CardChecker  cardChecker = CardChecker.getInstance();; //牌出法检查和控制
-//    public ArrayList<Player> players = new ArrayList<Player>(); //桌子上的四个玩家
-//    public ArrayList<RobotPlayer> robotPlayers = new ArrayList<RobotPlayer>();
-//    public Player HostPlayer;
-//    private Deck deck; //发给玩家的牌库
-    private int currentID = 0; //当前操作的人的id
-    private int hostID;
+
     private final Desk desk = new Desk();
-    private Frame frame;
-    private GameData gameData;
+    private final Frame frame;
+    private GameData gameData = new GameData();
     private boolean ifPlayed = false;
     private boolean ifPass = false;
 
-    public GameController(){
+    public GameController(Frame frame){
+        this.frame = frame;
         setPlayers("林连南");//玩家上桌
-        startGame();//游戏开始
-        this.frame = new Frame(this);
+
     }
 
     //找到持有方片三的玩家
@@ -33,14 +30,9 @@ public class GameController {
 
 
     //更新确认下一出牌的玩家
-    private void updateRound() {
+    private void updateCurrentID() {
         gameData.setCurrentID((gameData.getCurrentID()+1)%4);
     }
-
-//    //画出牌倒计时
-//    private void paintTimeLimit(Canvas canvas){
-//
-//    }
 
     //设置玩家
     public void setPlayers(String hostname){
@@ -82,31 +74,6 @@ public class GameController {
     }
 
 
-    //绘制玩家手牌
-    public void paintHand(){
-        /*TODO:
-            关联玩家的手牌Player.getHand()<->ui控件
-            绑定点击和双击事件，分别对应选取和放下，或者其他易于实现的方式
-            维护一个List<Card>表示玩家已经选取的牌,保证List是有序的(已经实现了比较的方法）
-          TODO：
-            添加出牌和Pass的ui控件
-          TODO：
-            出牌UI的点击事件<->if(PlayCardSet(ArrayList<Card>))方法
-            条件分支
-            如果方法返回false玩家需要重新操作，即重绘UI
-            如果返回true，玩家出牌成功，调用CoverCard
-         */
-    }
-
-    //绘制结算界面
-    private void paintResult(){
-        /*TODO:
-            创建一个新的窗口
-            调用calScore方法获取每个玩家的分数并展示
-            展示退出和新游戏的按钮
-         */
-    }
-
     //出牌按钮点击事件的响应函数
     public void PlayCardSet(ArrayList<Card> cards){
 
@@ -115,18 +82,15 @@ public class GameController {
         setToPlay.setCards(cards);
         cardChecker.SetTypeAndKey(setToPlay);
 
-        //如果识别不出种类返回false
-        if(setToPlay.getType()==CardsType.error){
-            frame.unlockPlayerView();
-            return;
+        if(gameData.getGameRound()!=gameData.getHostPlayer().getGameRound()){
+            if(setToPlay.compareTo(desk.getSetOnDesktop())<0||setToPlay.getType()==CardsType.error){
+                frame.unlockPlayerView();
+                return;
+            }
         }
 
-        //如果比桌上的牌小返回false
-        if(setToPlay.compareTo(desk.getSetOnDesktop())<=0)
-            return;
 
         //符合条件,玩家成功打出
-
         //更新桌面牌
         frame.CoverCard(cards);
 
@@ -139,87 +103,60 @@ public class GameController {
         //锁定玩家视角
         frame.lockPlayerView();
 
+        //更新游戏轮数
+        gameData.setGameRound(gameData.getGameRound()+1);
+        gameData.getHostPlayer().setGameRound(gameData.getGameRound());
+
         //检测游戏是否结束
-        if(gameData.getHostPlayer().getHand().isEmpty()){
-            gameData.setResultScore(calScore());
-            frame.paintResult(gameData.getResultScore());
-            return;
-        }
+        checkIfGameOver();
 
         /*
             TODO:
                 机器人出牌
                 ui渲染
          */
+//        for (int i = 1;i<4;i++){
+//            ArrayList<Card> result;
+//            result = gameData.getRobotPlayers().get(i).playCards2(desk.getSetOnDesktop(),gameData.getGameRound());
+//            if(!result.isEmpty()){
+//                frame.CoverCard(result);
+//            }
+//        }
+        updateCurrentID();
+        RobotsPlay();
 
         frame.unlockPlayerView();
     }
 
+
     //Pass按钮点击事件的相应函数
     public void PlayerPass(){
         frame.lockPlayerView();
-        updateRound();
+        updateCurrentID();
+        RobotsPlay();
+        frame.unlockPlayerView();
     }
 
     //开始游戏按钮的响应函数
     public void startGame(){
 
         dealCards();//发牌
-        this.currentID = findFirstPlayer(); //获取首先出牌的玩家
+
+        gameData.setCurrentID(findFirstPlayer());//设置当前出牌玩家
 
         //绘制游戏界面
         frame.paintPlayers(gameData.getPlayers());
-        frame.paintHand(gameData.getHostPlayer().getHand().getCards());
 
-//        while (true){
-//            if(!desk.IfGameOver()) {
-//                if (this.hostID == this.currentID) {
-//                /*
-//                    TODO:
-//                        开放玩家对手牌（HAND）的使用权限，即绑定点击事件
-//                        玩家有出牌，Pass两个选项
-//                */
-//                    frame.unlockPlayerView();
+//        //绘制玩家手牌
+        frame.paintHand(gameData.getHostPlayer().getHand().getCards());
 //
-//                    //等待玩家动作
-//                    while (!(ifPass||ifPlayed)){}
-//
-//                    if(gameData.getPlayers().get(this.currentID).getHand().isEmpty())
-//                        desk.setIfGameOver(true);
-//                    updateRound();
-//                    continue;
-//                } else {
-//                    //获取bot实例
-//                    RobotPlayer bot = gameData.getRobotPlayers().get(this.currentID);
-//
-//                    //获取bot的出牌列表
-//                    final ArrayList<Card> cardsToPlay = bot.playCards1(desk.getSetOnDesktop());
-//
-//                    //如果非空，把bot打出的牌整合成牌组，放入桌面
-//                    if(cardsToPlay!=null) {
-//                        //删除相应手牌
-//                        bot.getHand().getCards().removeAll(cardsToPlay);
-//
-//                        //更新牌组
-//                        frame.CoverCard(cardsToPlay);
-//                    }
-//                    //
-//                    /*
-//                        TODO:
-//                              用players.get(this.currentID)获取机器人实例
-//                              用Robot的方法更新this.setOnDesktop
-//                              Robot方法的返回值作为参数传入CoverCard,调用CoverCard
-//                     */
-//                    if(gameData.getRobotPlayers().get(gameData.getCurrentID()).getHand().isEmpty())
-//                        desk.setIfGameOver(true);
-//                    updateRound();
-//                    continue;
-//                }
-//            }else{
-//                overGame();
-//                break;
-//            }
-//        }
+//        如果不是玩家出牌，锁定玩家手牌，让机器人先出牌,然后解锁玩家手牌
+        if (gameData.getCurrentID()!=gameData.getHostID()) {
+            frame.lockPlayerView();
+            this.RobotsPlay();
+            Log.d("Contro","RobotDone!");
+            frame.unlockPlayerView();
+        }
     }
 
 
@@ -234,6 +171,10 @@ public class GameController {
         ArrayList<Integer> finalScore = new ArrayList<>(); //保存最终分数
         for(Player p: gameData.getPlayers()){
             Hand hand = p.getHand();
+            if(hand.isEmpty()){
+                baseScore.add(0);
+                continue;
+            }
             int n = hand.size();
             if(hand.getCard(hand.size()-1).getRank().equals("2"))//如果有2，底分翻倍
                 n*=2;
@@ -288,5 +229,34 @@ public class GameController {
 
     public void setIfPass(boolean ifPass){
         this.ifPass = ifPass;
+    }
+
+    public void RobotsPlay(){
+        while (gameData.getCurrentID()!= gameData.getHostID()){
+            ArrayList<Card> cards = gameData.getRobotPlayers().get(gameData.getCurrentID()).playCards2(desk.getSetOnDesktop(), gameData.getGameRound());
+
+            //机器人胜利
+            if(gameData.getRobotPlayers().get(gameData.getCurrentID()).getHand().isEmpty()){
+                gameData.setResultScore(calScore());
+                overGame();
+                return;
+            }
+
+            if(cards!=null){
+                frame.CoverCard(cards);
+                gameData.setGameRound(gameData.getGameRound()+1);
+                gameData.getRobotPlayers().get(gameData.getCurrentID()).setGameRound(gameData.getGameRound());
+            }
+            gameData.setCurrentID((gameData.getCurrentID()+1)%4);
+        }
+    }
+
+    public void checkIfGameOver() {
+        //检查游戏是否结束
+        if (gameData.getHostPlayer().getHand().isEmpty()) {
+            gameData.setResultScore(calScore());
+            overGame();
+        }
+
     }
 }

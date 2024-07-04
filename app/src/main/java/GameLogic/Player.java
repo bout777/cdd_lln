@@ -6,6 +6,7 @@ import java.util.List;
 public abstract class Player {
     private final String name;
     private Hand hand;
+    private int GameRound = 0;
 
     public Player(String name) {
         this.name = name;
@@ -22,6 +23,14 @@ public abstract class Player {
 
     public void addCard(Card card) {
         hand.addCard(card);
+    }
+
+    public int getGameRound() {
+        return GameRound;
+    }
+
+    public void setGameRound(int gameRound) {
+        GameRound = gameRound;
     }
 
     //成功出牌

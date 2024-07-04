@@ -7,7 +7,7 @@ public class HumanPlayer extends Player{
         super(name);
     }
 
-    @Override
-    public ArrayList<Card> playCards(final CardsSet setOnDesktop){return null;}
+//    @Override
+//    public ArrayList<Card> playCards(final CardsSet setOnDesktop){return null;}
 
 }

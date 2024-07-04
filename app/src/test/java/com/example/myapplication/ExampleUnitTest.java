@@ -15,12 +15,11 @@ import GameLogic.GameController;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        test();
         assertEquals(4, 2 + 2);
     }
 
-    private void test(){
-        GameController controller = new GameController();
-        controller.startGame();
-    }
+//    private void test(){
+//        GameController controller = new GameController();
+//        controller.startGame();
+//    }
 }

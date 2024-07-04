@@ -10,6 +10,7 @@ public class GameData {
     private final Deck deck = new Deck(); //发给玩家的牌库
     private int currentID = 0; //当前操作的人的id
     private final int hostID = 0;
+    private int GameRound = 0;
 
 
     public ArrayList<Player> getPlayers() {
@@ -40,6 +41,10 @@ public class GameData {
         return ResultScore;
     }
 
+    public int getGameRound() {
+        return GameRound;
+    }
+
     public void setCurrentID(int currentID) {
         this.currentID = currentID;
     }
@@ -58,5 +63,9 @@ public class GameData {
 
     public void setResultScore(ArrayList<Integer> resultScore) {
         ResultScore = resultScore;
+    }
+
+    public void setGameRound(int gameRound) {
+        GameRound = gameRound;
     }
 }
